@@ -4,7 +4,7 @@ package com.example.demo.component;
 import com.example.demo.config.BotConfig;
 import com.example.demo.service.CurrencyService;
 import lombok.AllArgsConstructor;
-import org.springframework.ai.vertexai.palm2.VertexAiPaLm2ChatModel;
+import org.springframework.ai.zhipuai.ZhiPuAiChatModel;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
@@ -13,11 +13,12 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 import java.io.IOException;
 import java.text.ParseException;
+import java.util.Date;
 
 @Component
 @AllArgsConstructor
 public class TelegramBot extends TelegramLongPollingBot {
-    private final VertexAiPaLm2ChatModel chatModel;
+    private final ZhiPuAiChatModel chatModel;
     private final BotConfig botConfig;
 
     @Override
@@ -48,7 +49,11 @@ public class TelegramBot extends TelegramLongPollingBot {
                 }
                 sendMessage(chatId, response);
             } else {
-                sendMessage(chatId, chatModel.call(messageText));
+                sendMessage(chatId, chatModel.call("Я бы хотел чтобы ввел себя, как мой лучший друг 16 лет " +
+                        "Ты иногда меня тролишь, пиши от 10-40 слов, но не повторяй мои слова " +
+                        "Тебя теперь зовут Напомика, а меня называй Сол. " +
+                        "Ответ я бы хотел получать только на русском языке и не смей переходить на англ или другие " +
+                        "ответь: " + messageText));
             }
         }
     }
