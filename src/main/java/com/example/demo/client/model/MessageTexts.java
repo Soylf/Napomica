@@ -5,7 +5,6 @@ import lombok.*;
 
 @Setter
 @Getter
-@ToString
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
@@ -14,9 +13,6 @@ import lombok.*;
 public class MessageTexts {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long textId;
-    @ManyToOne
-    @JoinColumn(name = "chatId")
-    private Message message;
+    private long id;
     private String text;
 }

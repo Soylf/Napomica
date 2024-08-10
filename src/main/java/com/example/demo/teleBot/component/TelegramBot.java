@@ -42,7 +42,7 @@ public class TelegramBot extends TelegramLongPollingBot {
     @Override
     public void onUpdateReceived(Update update) {
         long chatId = update.getMessage().getChatId();
-        log.info("Пользователь подключился к базе {}", chatId);
+        service.add(MessageDto.builder().chatId(chatId).build());
         if (update.hasMessage() && update.getMessage().hasText()) {
             String messageText = update.getMessage().getText();
             String name = update.getMessage().getChat().getFirstName();
@@ -80,7 +80,7 @@ public class TelegramBot extends TelegramLongPollingBot {
                                 "ответ только на русском языке. \n" +
                                 messageText);
                         sendMessage(chatId, aiResponse);
-                        //saveInfo(chatId, messageText,aiResponse, name);
+                        saveInfo(chatId, messageText,aiResponse, name);
                         log.info("Напомика сказала:\n{}",aiResponse );
                     } catch (Exception e) {
                         log.error("Error while calling AI model: ", e);

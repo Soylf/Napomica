@@ -18,7 +18,6 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-@Transactional(readOnly = true)
 public class MessageServiceImpl implements MessageService {
     private final MessageRepository repository;
 
@@ -40,6 +39,7 @@ public class MessageServiceImpl implements MessageService {
             newText.setMessage(foundMessage);
             newText.setText(messageDto.getText());
             foundMessage.getMessageTexts().add(newText);
+
         }
         if (messageDto.getTextBot() != null) {
             BotMessageTexts newBotText = new BotMessageTexts();

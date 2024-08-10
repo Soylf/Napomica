@@ -3,11 +3,11 @@ package com.example.demo.client.model;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Setter
 @Getter
-@ToString
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
@@ -15,12 +15,11 @@ import java.util.List;
 @Table(name = "Messages")
 public class Message {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long chatId;
+    @Column(name = "chat_id")
+    private Long chatId;
     private String name;
     @OneToMany(mappedBy = "message", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<MessageTexts> messageTexts;
-
+    private List<MessageTexts> messageTexts = new ArrayList<>();
     @OneToMany(mappedBy = "message", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<BotMessageTexts> botMessageTexts;
+    private List<BotMessageTexts> botMessageTexts = new ArrayList<>();
 }
