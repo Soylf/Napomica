@@ -14,5 +14,6 @@ public class MessageTexts {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
+    private Integer chatId;
     private String text;
 }

@@ -14,5 +14,6 @@ public class BotMessageTexts {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
+    private Integer chatId;
     private String text;
 }

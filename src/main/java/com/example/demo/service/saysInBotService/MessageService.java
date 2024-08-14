@@ -1,19 +1,13 @@
 package com.example.demo.service.saysInBotService;
 
 import com.example.demo.client.dto.MessageDto;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
+import com.example.demo.client.dto.MessageDtoOutput;
 
 public interface MessageService {
-    @Transactional
+
     void add(MessageDto saysInBotDto);
 
-    void update(MessageDto saysInBotDto);
+    void deleteUser(Integer chatId);
 
-    List<String> getUsersByChatId(long chatId);
-
-    MessageDto getUser(long chatId);
-
-    void deleteUser(long chatId);
+    MessageDtoOutput getUser(Integer chatId, Integer from, Integer size);
 }

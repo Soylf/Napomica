@@ -1,6 +1,6 @@
 CREATE TABLE IF NOT EXISTS Messages
 (
-    chat_id   INTEGER PRIMARY KEY,
+    chat_id   INTEGER,
     name      VARCHAR
 );
 

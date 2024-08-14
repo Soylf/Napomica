@@ -1,13 +1,13 @@
 package com.example.demo.client;
 
-import com.example.demo.client.dto.MessageDto;
+import com.example.demo.client.dto.MessageDtoOutput;
 import com.example.demo.service.saysInBotService.MessageService;
+import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.PositiveOrZero;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @Slf4j
 @RestController
@@ -16,18 +16,15 @@ import java.util.List;
 public class MessageController {
     private final MessageService service;
 
-    @GetMapping("/details/{chatId}") // Вывести все что сказал пользователь и что ему ответили
-    public List<String> getTextUsers(@PathVariable long chatId) {
-        return service.getUsersByChatId(chatId);
-    }
-
-    @GetMapping("/user/{chatId}") // Получить детали пользователя
-    public MessageDto getUser(@PathVariable long chatId){
-        return service.getUser(chatId);
+    @GetMapping("{chatId}") // Получить детали пользователя
+    public MessageDtoOutput getUser(@PathVariable Integer chatId,
+                                    @RequestParam(name = "from", defaultValue = "0") @PositiveOrZero Integer from,
+                                    @RequestParam(name = "size", defaultValue = "10") @Positive Integer size){
+        return service.getUser(chatId, from, size);
     }
 
     @DeleteMapping("/{chatId}") // Удалить пользователя
-    public ResponseEntity<Void> banedUser(@PathVariable long chatId) {
+    public ResponseEntity<Void> banedUser(@PathVariable Integer chatId) {
         service.deleteUser(chatId);
         return ResponseEntity.ok().build();
     }

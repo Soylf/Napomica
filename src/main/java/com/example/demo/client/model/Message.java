@@ -16,10 +16,10 @@ import java.util.List;
 public class Message {
     @Id
     @Column(name = "chat_id")
-    private Long chatId;
+    private Integer chatId;
     private String name;
-    @OneToMany(mappedBy = "message", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<MessageTexts> messageTexts = new ArrayList<>();
-    @OneToMany(mappedBy = "message", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<BotMessageTexts> botMessageTexts = new ArrayList<>();
+    //@OneToMany(mappedBy = "message", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<String> messageTexts = new ArrayList<>();
+    //@OneToMany(mappedBy = "message", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<String> botMessageTexts = new ArrayList<>();
 }

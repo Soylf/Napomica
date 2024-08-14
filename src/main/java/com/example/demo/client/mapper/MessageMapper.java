@@ -2,8 +2,6 @@ package com.example.demo.client.mapper;
 
 import com.example.demo.client.dto.MessageDto;
 import com.example.demo.client.model.Message;
-import com.example.demo.client.model.MessageTexts;
-import com.example.demo.client.model.BotMessageTexts;
 import org.mapstruct.Mapper;
 
 import org.mapstruct.factory.Mappers;
@@ -19,20 +17,14 @@ public interface MessageMapper {
 
     default Message fromDto(MessageDto saysInBotDto) {
         Message message = new Message();
-        message.setChatId(saysInBotDto.getChatId()); // Обновил имя метода для соответствия полю
+        message.setChatId(saysInBotDto.getChatId());
         message.setName(saysInBotDto.getName());
 
         if (saysInBotDto.getText() != null) {
-            MessageTexts text = new MessageTexts();
-            text.setMessage(message);
-            text.setText(saysInBotDto.getText());
-            message.getMessageTexts().add(text);
+            message.getMessageTexts().add(saysInBotDto.getText());
         }
         if (saysInBotDto.getTextBot() != null) {
-            BotMessageTexts textBot = new BotMessageTexts();
-            textBot.setMessage(message);
-            textBot.setText(saysInBotDto.getTextBot());
-            message.getBotMessageTexts().add(textBot);
+            message.getBotMessageTexts().add(saysInBotDto.getTextBot());
         }
 
         return message;

@@ -41,13 +41,12 @@ public class TelegramBot extends TelegramLongPollingBot {
 
     @Override
     public void onUpdateReceived(Update update) {
-        long chatId = update.getMessage().getChatId();
-        service.add(MessageDto.builder().chatId(chatId).build());
         if (update.hasMessage() && update.getMessage().hasText()) {
+            long chatId = update.getMessage().getChatId();
             String messageText = update.getMessage().getText();
             String name = update.getMessage().getChat().getFirstName();
 
-            log.info("Юзер {} задал: {}", chatId,messageText);
+            log.info("Юзер {} сказал: {}", chatId,messageText);
             if (messageText == null || messageText.trim().isEmpty()) {
                 sendMessage(chatId, "Ошибка: Введенное сообщение пустое. Пожалуйста, введите текст.");
                 return;
@@ -76,11 +75,10 @@ public class TelegramBot extends TelegramLongPollingBot {
                 } else {
                     try {
                         String aiResponse = chatModel.call("Разговаривай дерзко, унижай, матюкайся, часто говори не по делу, считай себя выше других " +
-                                "тебя зовут напомика, но изменяй свое имя по смыслу " +
-                                "ответ только на русском языке. \n" +
+                                "тебя зовут напомика, но изменяй свое имя по смыслу. "+
                                 messageText);
                         sendMessage(chatId, aiResponse);
-                        saveInfo(chatId, messageText,aiResponse, name);
+                        saveInfo((int) chatId, messageText,aiResponse, name);
                         log.info("Напомика сказала:\n{}",aiResponse );
                     } catch (Exception e) {
                         log.error("Error while calling AI model: ", e);
@@ -108,13 +106,13 @@ public class TelegramBot extends TelegramLongPollingBot {
         }
     }
 
-    private void saveInfo (long chatId, String text,
+    private void saveInfo (Integer chatId, String text,
                           String textAi, String name) {
         MessageDto says = new MessageDto();
         says.setChatId(chatId);
         says.setTextBot(textAi);
         says.setText(text);
         says.setName(name);
-        service.update(says);
+        service.add(says);
     }
 }
