@@ -5,6 +5,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface MessageTextsRepository extends JpaRepository<MessageTexts, Integer> {
-    Page<String> findAllByChatId(Integer chatId, Pageable pageable);
+public interface MessageTextsRepository extends JpaRepository<MessageTexts, Long> {
+    Page<MessageTexts> findAllByChatId(Long chatId, Pageable pageable);
 }

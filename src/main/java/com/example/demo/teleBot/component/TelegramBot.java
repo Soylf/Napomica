@@ -1,7 +1,7 @@
 package com.example.demo.teleBot.component;
 
 import com.example.demo.client.dto.MessageDto;
-import com.example.demo.service.saysInBotService.MessageService;
+import com.example.demo.service.MessageService.MessageService;
 import com.example.demo.teleBot.config.BotConfig;
 import com.example.demo.service.CurrencyService;
 import lombok.extern.slf4j.Slf4j;
@@ -46,7 +46,7 @@ public class TelegramBot extends TelegramLongPollingBot {
             String messageText = update.getMessage().getText();
             String name = update.getMessage().getChat().getFirstName();
 
-            log.info("Юзер {} сказал: {}", chatId,messageText);
+            log.info("Юзер {} с именем {}", chatId, name);
             if (messageText == null || messageText.trim().isEmpty()) {
                 sendMessage(chatId, "Ошибка: Введенное сообщение пустое. Пожалуйста, введите текст.");
                 return;
@@ -74,12 +74,12 @@ public class TelegramBot extends TelegramLongPollingBot {
                     }
                 } else {
                     try {
-                        String aiResponse = chatModel.call("Разговаривай дерзко, унижай, матюкайся, часто говори не по делу, считай себя выше других " +
-                                "тебя зовут напомика, но изменяй свое имя по смыслу. "+
+                        String aiResponse = chatModel.call("Разговаривай дерзко, унижай, часто говори не по делу, считай себя выше других. " +
+                                "Не называй свое имя, язык - русский язык. Ответь грамотно максимум 100 слов слов, ёмко: " +
                                 messageText);
                         sendMessage(chatId, aiResponse);
-                        saveInfo((int) chatId, messageText,aiResponse, name);
-                        log.info("Напомика сказала:\n{}",aiResponse );
+                        log.info("Бот сказал {}", aiResponse);
+                        saveInfo(chatId, messageText, aiResponse, name);
                     } catch (Exception e) {
                         log.error("Error while calling AI model: ", e);
                         sendMessage(chatId, "Ай бл, че ты сделал?");
@@ -106,7 +106,7 @@ public class TelegramBot extends TelegramLongPollingBot {
         }
     }
 
-    private void saveInfo (Integer chatId, String text,
+    private void saveInfo (Long chatId, String text,
                           String textAi, String name) {
         MessageDto says = new MessageDto();
         says.setChatId(chatId);

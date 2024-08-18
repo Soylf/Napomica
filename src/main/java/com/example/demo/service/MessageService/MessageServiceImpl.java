@@ -1,4 +1,4 @@
-package com.example.demo.service.saysInBotService;
+package com.example.demo.service.MessageService;
 
 
 import com.example.demo.client.dto.MessageDto;
@@ -12,14 +12,13 @@ import com.example.demo.client.repository.MessageRepository;
 import com.example.demo.client.repository.MessageTextsRepository;
 import com.example.demo.error.exception.NotFoundException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Objects;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -32,9 +31,8 @@ public class MessageServiceImpl implements MessageService {
     @Transactional
     public void add(MessageDto messageDto) {
         Message message = MessageMapper.MAPPER.fromDto(messageDto);
-        if (!Objects.equals(message.getName(), messageDto.getName())) {
-            message.setName(messageDto.getName());
-        }
+        message.setName(messageDto.getName());
+        repository.save(message);
         if (messageDto.getText() != null) {
             MessageTexts newText = new MessageTexts();
             newText.setText(messageDto.getText());
@@ -47,43 +45,39 @@ public class MessageServiceImpl implements MessageService {
             newBotText.setChatId(message.getChatId());
             botTextsRepository.save(newBotText);
         }
-        repository.save(message);
     }
 
     @Override
-    @Transactional
-    public void deleteUser(Integer chatId) {
-        repository.delete(GetUserById(chatId));
-    }
-
-    @Override
-    public MessageDtoOutput getUser(Integer chatId, Integer size, Integer from) {
+    public MessageDtoOutput getUser(Long chatId, Integer from, Integer size) {
         CheckUserById(chatId);
         return MessageDtoOutput.builder()
                 .chatId(chatId)
                 .name("User ID: " + chatId)
-                .text(getTextAndTextAiPage(chatId,false, from, size))
-                .textBot(getTextAndTextAiPage(chatId,true, from, size))
+                .text(getTextPage(chatId, from, size))
+                .textBot(getTextAiPage(chatId, from, size))
                 .build();
     }
 
+    @Override
+    public List<Message> getMessage() {
+        return repository.findAll();
+    }
+
     //dop-methods
-    private Message GetUserById(Integer chatId) {
+    private Message GetUserById(Long chatId) {
         return repository.findById(chatId)
                 .orElseThrow(() -> new NotFoundException("Not Found"));
     }
-    private void CheckUserById(Integer chatId) {
+    private void CheckUserById(Long chatId) {
         repository.findById(chatId)
                 .orElseThrow(() -> new NotFoundException("Not Found"));
     }
-
-
-    private Page<String> getTextAndTextAiPage(Integer chatId, boolean checkText, Integer from, Integer size) { //checkText - TextAi or TextUser
+    private List<BotMessageTexts> getTextAiPage(Long chatId,Integer from, Integer size) { //checkText - TextAi or TextUser
         Pageable pageable = PageRequest.of(from, size, Sort.by(Sort.Direction.DESC, "id"));
-        if(checkText) {
-            return botTextsRepository.findAllByChatId(chatId, pageable); //textAi
-        } else {
-            return textsRepository.findAllByChatId(chatId, pageable); //text
-        }
+        return botTextsRepository.findAllByChatId(chatId, pageable).getContent();
+    }
+    private List<MessageTexts> getTextPage(Long chatId, Integer from, Integer size) {
+        Pageable pageable = PageRequest.of(from, size, Sort.by(Sort.Direction.DESC, "id"));
+        return textsRepository.findAllByChatId(chatId, pageable).getContent();
     }
 }
