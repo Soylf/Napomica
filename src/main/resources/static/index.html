@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SoyChat Lobby</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin: 0;
+            padding: 0;
+            background-color: #1c1c1c;
+            color: #e0e0e0;
+            height: 100vh;
+        }
+
+        .app-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+        }
+
+        .toggleButtons {
+            display: flex;
+            justify-content: space-between;
+            width: 80%;
+            max-width: 600px;
+        }
+
+        .toggleButton {
+            padding: 20px;
+            border: 1px solid #555;
+            border-radius: 8px;
+            background: linear-gradient(to bottom, #333333, #1c1c1c);
+            color: white;
+            cursor: pointer;
+            transition: background 0.3s ease;
+            flex: 1;
+            text-align: center;
+            margin: 0 10px;
+            font-size: 1.2em;
+        }
+
+        .toggleButton:hover {
+            background: linear-gradient(to bottom, #444444, #222222);
+        }
+
+        /* Стиль для всплывающих окон */
+        .modal {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #2e2e2e;
+            padding: 20px;
+            border-radius: 8px;
+            display: none;
+            width: 80%;
+            max-width: 600px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
+            box-sizing: border-box; /* Учитываем padding в общей ширине */
+        }
+
+        .modal h2 {
+            margin-top: 0;
+        }
+
+        .modal-content {
+            margin-top: 10px;
+        }
+
+        .closeButton {
+            background-color: #444;
+            color: white;
+            border: none;
+            padding: 10px;
+            cursor: pointer;
+            border-radius: 5px;
+            float: right;
+        }
+
+        .closeButton:hover {
+            background-color: #555;
+        }
+
+        .inputField {
+            margin-bottom: 10px;
+            padding: 10px;
+            width: calc(100% - 22px); /* Уменьшена ширина для учета отступов */
+            border-radius: 4px;
+            border: 1px solid #555;
+            background-color: #3b3b3b;
+            color: #ffffff;
+            box-sizing: border-box; /* Учитываем padding и border в общей ширине */
+        }
+
+        .outputField {
+            margin-top: 10px;
+            padding: 10px;
+            border-radius: 4px;
+            background-color: #3b3b3b;
+            color: #ffffff;
+            max-height: 300px; /* Устанавливаем максимальную высоту */
+            overflow-y: auto; /* Добавляем прокрутку, если текст выходит за пределы */
+        }
+
+        .outputField p {
+            margin: 5px 0;
+        }
+
+        .message-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .message-list li {
+            padding: 10px;
+            border-bottom: 1px solid #555;
+        }
+
+        .message-time {
+            font-weight: bold;
+            color: #c0c0c0; /* Цвет для времени */
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .message-text {
+            color: #ffffff; /* Цвет для текста */
+        }
+
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        .table th, .table td {
+            border: 1px solid #555;
+            padding: 10px;
+            text-align: left;
+        }
+
+        .table th {
+            background-color: #444;
+            color: #e0e0e0;
+        }
+
+        .table td {
+            background-color: #333;
+            color: #e0e0e0;
+        }
+
+        @media (max-width: 768px) {
+            .toggleButtons {
+                flex-direction: column;
+                width: 90%;
+            }
+
+            .toggleButton {
+                margin-bottom: 20px;
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="app-container">
+    <!-- Кнопки для переключения между секциями -->
+    <div class="toggleButtons">
+        <button class="toggleButton" id="infoUsersButton">Info Users</button>
+        <button class="toggleButton" id="userMessageButton">User Message</button>
+    </div>
+</div>
+
+<!-- Модальное окно для Info Users -->
+<div id="infoUsersModal" class="modal">
+    <button class="closeButton" id="closeInfoUsers">X</button>
+    <h2>Info Users</h2>
+    <div class="modal-content">
+        <table id="usersTable" class="table">
+            <thead>
+            <tr>
+                <th>Chat ID</th>
+                <th>Name</th>
+            </tr>
+            </thead>
+            <tbody>
+            <!-- Здесь будут данные пользователей -->
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Модальное окно для User Message -->
+<div id="userMessageModal" class="modal">
+    <button class="closeButton" id="closeUserMessage">X</button>
+    <h2>User Message</h2>
+    <div class="modal-content">
+        <label for="chatIdInput">Chat ID:</label>
+        <input type="number" class="inputField" id="chatIdInput" placeholder="Enter Chat ID">
+        <label for="fromInput">From:</label>
+        <input type="number" class="inputField" id="fromInput" placeholder="Enter From">
+        <label for="sizeInput">Size:</label>
+        <input type="number" class="inputField" id="sizeInput" placeholder="Enter Size">
+        <button id="submitMessageButton" class="toggleButton">Submit</button>
+
+        <!-- Поле для вывода ответа сервера -->
+        <div class="outputField" id="messageOutput">
+            <!-- Здесь появится вывод сообщения -->
+        </div>
+    </div>
+</div>
+
+<script src="app.js"></script> <!-- Подключаем внешний JS-файл -->
+</body>
+</html>
