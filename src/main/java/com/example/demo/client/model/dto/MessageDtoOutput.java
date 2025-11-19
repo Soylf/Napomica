@@ -1,4 +1,4 @@
-package com.example.demo.client.dto;
+package com.example.demo.client.model.dto;
 
 import com.example.demo.client.model.BotMessageTexts;
 import com.example.demo.client.model.MessageTexts;

@@ -1,8 +1,8 @@
 package com.example.demo.client;
 
-import com.example.demo.client.dto.MessageDtoOutput;
+import com.example.demo.client.model.dto.MessageDtoOutput;
 import com.example.demo.client.model.Message;
-import com.example.demo.service.MessageService.MessageService;
+import com.example.demo.service.messageService.MessageService;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.PositiveOrZero;
 import lombok.RequiredArgsConstructor;

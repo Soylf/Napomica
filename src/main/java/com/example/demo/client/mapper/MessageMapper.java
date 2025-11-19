@@ -1,6 +1,6 @@
 package com.example.demo.client.mapper;
 
-import com.example.demo.client.dto.MessageDto;
+import com.example.demo.client.model.dto.MessageDto;
 import com.example.demo.client.model.Message;
 import org.mapstruct.Mapper;
 
