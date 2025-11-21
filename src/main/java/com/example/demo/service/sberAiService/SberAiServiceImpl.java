@@ -19,6 +19,7 @@ import java.util.Map;
 @Service
 @RequiredArgsConstructor
 public class SberAiServiceImpl implements SberAiService{
+    private final String GIGA_CHAT_SCOPE = "GIGACHAT_API_PERS";
     private final RestTemplate restTemplate;
     private String sberAccessToken;
     private final SberModelConfig sberModelConfig;
@@ -74,7 +75,7 @@ public class SberAiServiceImpl implements SberAiService{
         headers.set("Authorization", "Basic " + sberModelConfig.getAuthorizationKey());
 
         MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
-        body.add("scope", "GIGACHAT_API_PERS");
+        body.add("scope", GIGA_CHAT_SCOPE);
 
         return new HttpEntity<>(body, headers);
     }
