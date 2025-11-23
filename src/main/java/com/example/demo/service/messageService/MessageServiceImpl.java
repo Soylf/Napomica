@@ -29,7 +29,7 @@ public class MessageServiceImpl implements MessageService {
 
     @Override
     @Transactional
-    public void add(MessageDto messageDto) {
+    public void add(@NotNull MessageDto messageDto) {
         Message message = MessageMapper.MAPPER.fromDto(messageDto);
         message.setName(messageDto.getName());
 
@@ -54,7 +54,7 @@ public class MessageServiceImpl implements MessageService {
         return repository.findAll();
     }
 
-    //dop-methods
+
     private void CheckUserById(Long chatId) {
         repository.findById(chatId)
                 .orElseThrow(() -> new NotFoundException("Not Found"));

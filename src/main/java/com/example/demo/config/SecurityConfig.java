@@ -20,14 +20,13 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception { //csrf(AbstractHttpConfigurer::disable);
         http
                 .authorizeHttpRequests(auth -> auth
-                                .requestMatchers("/index.html",
-                                        "/", "/search/**", "/css/**", "/js/**").permitAll()
+                                .requestMatchers( "/css/**").permitAll()
                                 .anyRequest().hasAnyRole("USER", "ADMIN"))
                 .formLogin(form -> form
                         .loginPage("/login").loginProcessingUrl("/perform_login")
                         .defaultSuccessUrl("/index.html", true)
                         .permitAll()
-                ).csrf(csrf -> csrf.ignoringRequestMatchers("/index"));
+                );
 
 
         return http.build();
@@ -35,16 +34,12 @@ public class SecurityConfig {
 
     @Bean
     public UserDetailsService userDetailsService () {
-        UserDetails user = User.withUsername("User")
-                .password("{noop}2876")
-                .roles("USER")
-                .build();
-        UserDetails admin = User.withUsername("Admin")
-                .password(passwordEncoder().encode("1234"))
+        UserDetails admin = User.withUsername("Soyl")
+                .password(passwordEncoder().encode("28762876"))
                 .roles("ADMIN")
                 .build();
 
-        return new InMemoryUserDetailsManager(user, admin);
+        return new InMemoryUserDetailsManager(admin);
     }
 
     @Bean
