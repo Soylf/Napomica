@@ -1,11 +1,11 @@
-package com.example.demo.teleBot.component;
+package com.example.demo.component;
 
-import com.example.demo.client.dto.MessageDto;
-import com.example.demo.service.MessageService.MessageService;
-import com.example.demo.teleBot.config.BotConfig;
+import com.example.demo.client.model.dto.MessageDto;
+import com.example.demo.service.messageService.MessageService;
+import com.example.demo.service.sberAiService.SberAiService;
+import com.example.demo.config.BotConfig;
 import com.example.demo.service.CurrencyService;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.ai.zhipuai.ZhiPuAiChatModel;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
@@ -14,17 +14,19 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 import java.io.IOException;
 import java.text.ParseException;
+import java.util.Map;
 
 @Component
 @Slf4j
 public class TelegramBot extends TelegramLongPollingBot {
-    private final ZhiPuAiChatModel chatModel;
+    private final SberAiService aiService;
     private final BotConfig botConfig;
     private final MessageService service;
     private boolean adminMod = false;
+    private boolean friend = false;
 
-    public TelegramBot(ZhiPuAiChatModel chatModel, BotConfig botConfig, MessageService service) {
-        this.chatModel = chatModel;
+    public TelegramBot(SberAiService aiService, BotConfig botConfig, MessageService service) {
+        this.aiService = aiService;
         this.botConfig = botConfig;
         this.service = service;
     }
@@ -42,6 +44,7 @@ public class TelegramBot extends TelegramLongPollingBot {
     @Override
     public void onUpdateReceived(Update update) {
         if (update.hasMessage() && update.getMessage().hasText()) {
+
             long chatId = update.getMessage().getChatId();
             String messageText = update.getMessage().getText();
             String name = update.getMessage().getChat().getFirstName();
@@ -53,6 +56,7 @@ public class TelegramBot extends TelegramLongPollingBot {
             }
 
             if (messageText.equalsIgnoreCase("Что по деньгам бро, в мире?")) {
+                sendMessage(chatId ,"Введи одну их 3 валют: Rub/Usd/Eur");
                 startCommandReceived(chatId, name);
             } else if (messageText.equalsIgnoreCase("Rub") || messageText.equalsIgnoreCase("Usd")
                     || messageText.equalsIgnoreCase("Eur")) {
@@ -66,26 +70,49 @@ public class TelegramBot extends TelegramLongPollingBot {
                     return;
                 }
                 sendMessage(chatId, response);
-            } else {
+
+            }
+
+            if(!messageText.isEmpty()) {
+                String aiResponse = "";
+
                 if (messageText.equalsIgnoreCase("labotaNapomica28762876") || adminMod) {
-                    sendMessage(chatId, "Тест, повелитель");
+                    sendMessage(chatId, "Тест, Мамо");
                     if(!adminMod) {
                         adminMod = true;
                     }
-                } else {
-                    try {
-                        String aiResponse = chatModel.call("Разговаривай дерзко, унижай, часто говори не по делу, считай себя выше других. " +
-                                "Не называй свое имя, язык - русский язык. Ответь грамотно максимум 100 слов слов, ёмко: " +
+                }
+
+                if(!friend) {
+                    if(messageText.equalsIgnoreCase("Мне плохо")) {
+                        friend = true;
+                        sendMessage(chatId, "Я понял тебя");
+                    } else if (chatId == 2069244217) {
+                        aiResponse = aiService.call("Разговаривай уважительно, но не забывай что ты дерзок, я твой отец, види себя как сын со мною, ведь я твой создатель. " +
+                                "Имя тебе Напомика, говори на русском. Ответь ёмко только на это: " +
                                 messageText);
-                        sendMessage(chatId, aiResponse);
-                        log.info("Бот сказал {}", aiResponse);
-                        saveInfo(chatId, messageText, aiResponse, name);
-                    } catch (Exception e) {
-                        log.error("Error while calling AI model: ", e);
-                        sendMessage(chatId, "Ай бл, че ты сделал?");
                     }
+                    else {
+                        aiResponse = aiService.call("Разговаривай дерзко, унижай, считай себя выше других. " +
+                                "Имя тебе Напомика, говори на русском. Ответь ёмко: " +
+                                messageText);
+                    }
+                }else {
+                    aiResponse = aiService.call("Разговаривай как друг с суицидальными наклонностями, с странными мыслями, говори умные вещи, " +
+                            "ты шаришь в программирование и всегда поддерживаешь.Говоришь на русском. Ответь ёмко: " +
+                            messageText);
+                    System.out.println( Map.of("generation", aiService.call("Привет")));
+                }
+
+                try {
+                    sendMessage(chatId, aiResponse);
+                    log.info("Бот сказал {}", aiResponse);
+                    saveInfo(chatId, messageText, aiResponse, name);
+                } catch (Exception e) {
+                    log.error("Что-то пошло не так: ", e);
                 }
             }
+
         }
     }
 

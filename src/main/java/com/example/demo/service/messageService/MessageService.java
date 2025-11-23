@@ -1,7 +1,7 @@
-package com.example.demo.service.MessageService;
+package com.example.demo.service.messageService;
 
-import com.example.demo.client.dto.MessageDto;
-import com.example.demo.client.dto.MessageDtoOutput;
+import com.example.demo.client.model.dto.MessageDto;
+import com.example.demo.client.model.dto.MessageDtoOutput;
 import com.example.demo.client.model.Message;
 
 import java.util.List;
