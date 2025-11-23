@@ -4,7 +4,6 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
 import java.util.Date;
 
 @Setter
@@ -20,6 +19,9 @@ public class BotMessageTexts {
     private long id;
     private Long chatId;
     private String text;
-    private String dateTime =
-            String.valueOf(LocalDateTime.parse(new SimpleDateFormat("HH:mm dd MMM yyyy").format(new Date())));
+    private String dateTime = getFormatDate(new Date());
+
+    private static String getFormatDate(Date data) {
+        return new SimpleDateFormat("HH:mm dd MMM yyyy").format(data);
+    }
 }
