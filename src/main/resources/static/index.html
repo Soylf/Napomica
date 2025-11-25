@@ -15,16 +15,51 @@
     <link rel="stylesheet" href="css/dop/customBody.css">
 
     <link rel="stylesheet" href="css/index/index.css">
+    <link rel="stylesheet" href="css/index/inputBoxForm.css">
+    <link rel="stylesheet" href="css/index/popup.css">>
 </head>
 <body>
+<div class="gradient-background">
+    <div class="blue-layer"></div>
+    <div class="red-layer"></div>
+</div>
 
 <div class="menu-toggle" onclick="toggleMenu()">
     <i class="fas fa-bars"></i>
 </div>
 <div id="sideMenu" class="side-menu">
     <ul>
-        <li><a href="Information.html"><i class="fas fa-info-circle"></i> Информация</a></li>
+        <li><a href="information.html"><i class="fas fa-info-circle"></i> Информация</a></li>
     </ul>
+</div>
+
+<div class="upload-container" style="margin: 80px auto; text-align: center;">
+    <h2>Список пользователей</h2>
+    <div id="userList" class="user-list"></div>
+</div>
+
+<div class="mini-input-box-form">
+    <h4>Параметры</h4>
+    <label for="chatIdInput">chatId</label>
+    <input type="text" id="chatIdInput" placeholder="1234...">
+
+    <label for="fromInput">От</label>
+    <input type="text" id="fromInput" placeholder="0">
+
+    <label for="sizeInput">До</label>
+    <input type="text" id="sizeInput" placeholder="6">
+
+    <button onclick="sendParams()">Получить данные</button>
+</div>
+
+<div id="messagePopup" class="message-popup" style="display: none">
+    <div class="msg-header">
+        <span id="popupChatId"></span>
+    </div>
+
+    <div id="popupMessages" class="msg-content"></div>
+
+    <button class="close-btn" onclick="closePopup()">Закрыть</button>
 </div>
 
 <script>
@@ -33,6 +68,7 @@
         menu.style.display = (menu.style.display === 'block') ? 'none' : 'block';
     }
 </script>
-<script src="js/index/index.js"></script>
+<script src="js/index/userListScript.js"></script>
+<script src="js/index/getMessageInput.js"></script>
 </body>
 </html>
