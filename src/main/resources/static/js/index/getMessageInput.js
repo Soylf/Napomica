@@ -24,60 +24,76 @@ function openPopup(data) {
 
     const allMessages = [];
 
+    function parseCustomDate(str) {
+        const [time, day, monthName, year, second] = str.split(" ");
+        const [hours, minutes] = time.split(":");
+
+        const months = {
+            "янв.": 0, "февр.": 1, "мар.": 2, "апр.": 3, "мая": 4, "июн.": 5,
+            "июл.": 6, "авг.": 7, "сент.": 8, "окт.": 9, "нояб.": 10, "дек.": 11
+        };
+
+        return new Date(year, months[monthName], day, hours, minutes);
+    }
+
     data.text.forEach(t => {
         allMessages.push({
             from: "user",
             text: t.text,
-            date: t.dateTime
+            date: parseCustomDate(t.dateTime)
         });
     });
+
     data.textBot.forEach(t => {
         allMessages.push({
             from: "bot",
             text: t.text,
-            date: t.dateTime
+            date: parseCustomDate(t.dateTime),
+            used: false
         });
     });
 
-    allMessages.sort((a, b) => new Date(a.date) - new Date(b.date));
+    allMessages.sort((a, b) => a.date - b.date);
 
-    const paired = [];
+    const pairs = [];
 
     for (let i = 0; i < allMessages.length; i++) {
         const msg = allMessages[i];
 
         if (msg.from === "user") {
-            let bot = null;
+            let botReply = null;
 
             for (let j = i + 1; j < allMessages.length; j++) {
-                if (allMessages[j].from === "bot") {
-                    bot = allMessages[j];
+                if (allMessages[j].from === "bot" && !allMessages[j].used) {
+                    botReply = allMessages[j];
+                    allMessages[j].used = true;
                     break;
                 }
             }
 
-            paired.push({ user: msg, bot: bot });
+            pairs.push({ user: msg, bot: botReply });
         }
     }
 
-    paired.forEach(p => {
+    pairs.forEach(p => {
         const userDiv = document.createElement("div");
         userDiv.className = "user-msg";
         userDiv.innerHTML =
-            `<strong>${p.user.date}</strong><br>${p.user.text}`;
+            `<strong>${p.user.date.toLocaleString()}</strong><br>${p.user.text}`;
         msgBox.appendChild(userDiv);
 
         if (p.bot) {
             const botDiv = document.createElement("div");
             botDiv.className = "bot-msg";
             botDiv.innerHTML =
-                `<strong>${p.bot.date}</strong><br>${p.bot.text}`;
+                `<strong>${p.bot.date.toLocaleString()}</strong><br>${p.bot.text}`;
             msgBox.appendChild(botDiv);
         }
     });
 
     document.getElementById("messagePopup").style.display = "block";
 }
+
 
 function closePopup() {
     document.getElementById("messagePopup").style.display = "none";
