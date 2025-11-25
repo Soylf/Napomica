@@ -1,0 +1,56 @@
+.mini-input-box-form {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background-color: #1f2129;
+  border: 1px solid #3a3d4d;
+  border-radius: 12px;
+  padding: 15px 20px;
+  width: 200px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.6);
+  color: #fff;
+  font-family: Inter, sans-serif;
+  z-index: 999;
+}
+
+.mini-input-box-form h4 {
+  margin: 0 0 10px 0;
+  font-size: 16px;
+  color: #ffffff;
+  text-align: center;
+}
+
+.mini-input-box-form label {
+  font-size: 12px;
+  color: #cfcfcf;
+  margin-top: 8px;
+  display: block;
+}
+
+.mini-input-box-form input {
+  width: 100%;
+  padding: 6px 8px;
+  margin-top: 3px;
+  margin-bottom: 8px;
+  border-radius: 6px;
+  border: 1px solid #3a3d4d;
+  background-color: #2b2e3b;
+  color: #fff;
+  font-size: 13px;
+  box-sizing: border-box;
+}
+
+.mini-input-box-form button {
+  width: 100%;
+  padding: 6px;
+  background-color: #2196F3;
+  border: none;
+  border-radius: 12px;
+  font-size: 14px;
+  color: #fff;
+  cursor: pointer;
+}
+
+.mini-input-box-form button:hover {
+  background-color: #1976D2;
+}

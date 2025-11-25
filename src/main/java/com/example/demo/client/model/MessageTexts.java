@@ -22,6 +22,6 @@ public class MessageTexts {
     private String dateTime = getFormatDate(new Date());
 
     private static String getFormatDate(Date data) {
-        return new SimpleDateFormat("HH:mm dd MMM yyyy").format(data);
+        return new SimpleDateFormat("HH:mm:ss dd MMM yyyy").format(data);
     }
 }
