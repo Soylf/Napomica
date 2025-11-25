@@ -24,7 +24,6 @@ public class SberAiServiceImpl implements SberAiService{
     private String sberAccessToken;
     private final SberModelConfig sberModelConfig;
 
-
     @Override
     public void generateToken() {
         HttpEntity<?> entity = requestToken();
