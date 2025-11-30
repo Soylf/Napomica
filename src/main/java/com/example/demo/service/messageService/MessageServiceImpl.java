@@ -39,6 +39,7 @@ public class MessageServiceImpl implements MessageService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public MessageDtoOutput getUser(Long chatId, Integer from, Integer size) {
         CheckUserById(chatId);
         return MessageDtoOutput.builder()
@@ -60,10 +61,12 @@ public class MessageServiceImpl implements MessageService {
                 .orElseThrow(() -> new NotFoundException("Not Found"));
     }
 
+    @Transactional(readOnly = true)
     private List<BotMessageTexts> getTextAiPage(Long chatId,Integer from, Integer size) { //checkText - TextAi or TextUser
         Pageable pageable = PageRequest.of(from, size, Sort.by(Sort.Direction.DESC, "id"));
         return botTextsRepository.findAllByChatId(chatId, pageable).getContent();
     }
+    @Transactional(readOnly = true)
     private List<MessageTexts> getTextPage(Long chatId, Integer from, Integer size) {
         Pageable pageable = PageRequest.of(from, size, Sort.by(Sort.Direction.DESC, "id"));
         return textsRepository.findAllByChatId(chatId, pageable).getContent();
