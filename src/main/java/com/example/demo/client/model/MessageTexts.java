@@ -18,6 +18,7 @@ public class MessageTexts {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     private Long chatId;
+    @Lob
     private String text;
     private String dateTime = getFormatDate(new Date());
 
