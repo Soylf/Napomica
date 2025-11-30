@@ -18,22 +18,20 @@ function sendParams() {
 
 function openPopup(data) {
     document.getElementById("popupChatId").innerText = `ID: ${data.chatId}`;
-
     const msgBox = document.getElementById("popupMessages");
     msgBox.innerHTML = "";
-
     const allMessages = [];
 
     function parseCustomDate(str) {
-        const [time, day, monthName, year, second] = str.split(" ");
-        const [hours, minutes] = time.split(":");
+        const [time, day, monthName, year] = str.split(" ");
+        const [hours, minutes, seconds] = time.split(":");
 
         const months = {
             "янв.": 0, "февр.": 1, "мар.": 2, "апр.": 3, "мая": 4, "июн.": 5,
             "июл.": 6, "авг.": 7, "сент.": 8, "окт.": 9, "нояб.": 10, "дек.": 11
         };
 
-        return new Date(year, months[monthName], day, hours, minutes);
+        return new Date(year, months[monthName], day, hours, minutes, seconds || 0);
     }
 
     data.text.forEach(t => {

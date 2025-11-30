@@ -135,11 +135,11 @@ public class TelegramBot extends TelegramLongPollingBot {
 
     private void saveInfo (Long chatId, String text,
                           String textAi, String name) {
-        MessageDto says = new MessageDto();
-        says.setChatId(chatId);
-        says.setTextBot(textAi);
-        says.setText(text);
-        says.setName(name);
-        service.add(says);
+        MessageDto messageDto = new MessageDto();
+        messageDto.setChatId(chatId);
+        messageDto.setTextBot(textAi);
+        messageDto.setText(text);
+        messageDto.setName(name);
+        service.add(messageDto);
     }
 }
