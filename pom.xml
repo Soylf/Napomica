@@ -12,6 +12,13 @@
 	<artifactId>demo</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>demo</name>
+
+    <modules>
+        <module>frontend</module>
+        <module>telegram-service</module>
+        <module>main-service</module>
+    </modules>
+
 	<description>Demo project for Spring Boot</description>
 	<url/>
 	<licenses>
