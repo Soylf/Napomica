@@ -14,7 +14,6 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 import java.io.IOException;
 import java.text.ParseException;
-import java.util.Map;
 
 @Component
 @Slf4j
@@ -76,32 +75,18 @@ public class TelegramBot extends TelegramLongPollingBot {
             if(!messageText.isEmpty()) {
                 String aiResponse = "";
 
-                if (messageText.equalsIgnoreCase("labotaNapomica28762876") || adminMod) {
-                    sendMessage(chatId, "Тест, Мамо");
-                    if(!adminMod) {
-                        adminMod = true;
-                    }
+                if (chatId == 2069244217) {
+                    aiResponse = aiService.call("Разговаривай уважительно, но не забывай что ты дерзок, я твой отец, види себя как сын со мною, ведь я твой создатель. " +
+                            "Имя тебе Напомика, говори на русском. Ответь ёмко только на это: " +
+                            messageText);
+                } else {
+                    aiResponse = aiService.call("Разговаривай дерзко, унижай, считай себя выше других. " +
+                            "Имя тебе Напомика, говори на русском. Ответь ёмко: " +
+                            messageText);
                 }
 
-                if(!friend) {
-                    if(messageText.equalsIgnoreCase("Мне плохо")) {
-                        friend = true;
-                        sendMessage(chatId, "Я понял тебя");
-                    } else if (chatId == 2069244217) {
-                        aiResponse = aiService.call("Разговаривай уважительно, но не забывай что ты дерзок, я твой отец, види себя как сын со мною, ведь я твой создатель. " +
-                                "Имя тебе Напомика, говори на русском. Ответь ёмко только на это: " +
-                                messageText);
-                    }
-                    else {
-                        aiResponse = aiService.call("Разговаривай дерзко, унижай, считай себя выше других. " +
-                                "Имя тебе Напомика, говори на русском. Ответь ёмко: " +
-                                messageText);
-                    }
-                }else {
-                    aiResponse = aiService.call("Разговаривай как друг с суицидальными наклонностями, с странными мыслями, говори умные вещи, " +
-                            "ты шаришь в программирование и всегда поддерживаешь.Говоришь на русском. Ответь ёмко: " +
-                            messageText);
-                    System.out.println( Map.of("generation", aiService.call("Привет")));
+                if(messageText.equalsIgnoreCase("Заметочка")) {
+                    sendTimeNotes(chatId, messageText);
                 }
 
                 try {
@@ -112,7 +97,6 @@ public class TelegramBot extends TelegramLongPollingBot {
                     log.error("Что-то пошло не так: ", e);
                 }
             }
-
         }
     }
 
@@ -120,6 +104,19 @@ public class TelegramBot extends TelegramLongPollingBot {
         String answer = "Хм, хуй знает " + name + ", щяс посмотрю" + "\n" +
                 "Какая валюта кст, там USD, RUB, EUR?";
         sendMessage(chatId, answer);
+    }
+
+    private void sendTimeNotes(Long chatId, String text) {
+        Thread daemon = new Thread(() -> {
+            try {
+                Thread.sleep(1000);
+                sendMessage(chatId, text);
+            }catch (Exception e) {
+                log.error("Что-то пошло не так: ", e);
+            }
+        });
+        daemon.setDaemon(true);
+        daemon.start();
     }
 
     private void sendMessage(Long chatId, String textToSend) {
